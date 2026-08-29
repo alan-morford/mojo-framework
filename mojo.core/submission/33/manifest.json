@@ -1,0 +1,21 @@
+{
+	"submission": "33",
+	"files":
+	{
+		"javascript":
+		[
+			"prologue.js",
+			"perf.js",
+			"service.js",
+			"event.js",
+			"child.js",
+			"animation.js",
+			"scroll.js",
+			"app.js",
+			"appmenu.js",
+			"altchar.js"
+		]
+	},
+	"builtinReady": true
+}
+

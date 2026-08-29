@@ -36200,11 +36200,8 @@ Mojo.AccountManager.addUtilityMethodsToPrototype(Mojo.Scene.AccountFirstLaunch);
 }
 }
 
-const $palmInitFramework506 = palmInitFramework506;
-
-function SetupFramework506() {
-	%SetProperty(global, "palmInitFramework506", $palmInitFramework506, 5);
-}
-
-SetupFramework506();
-
+/* de-nativized for Chromium: the original trailer published this via
+ * %SetProperty(global, ...), a V8 natives intrinsic unavailable to
+ * ordinary scripts. Classic-script evaluation already puts the
+ * declaration on the global object; assign explicitly to be safe. */
+if (typeof window !== 'undefined') { window.palmInitFramework506 = palmInitFramework506; }

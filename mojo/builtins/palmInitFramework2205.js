@@ -1415,11 +1415,8 @@ function setupFramework(){loadFrameworkConfiguration();console.info("Requested s
 }
 }
 
-const $palmInitFramework2205 = palmInitFramework2205;
-
-function SetupFramework205() {
-	%SetProperty(global, "palmInitFramework2205", $palmInitFramework2205, 5);
-}
-
-SetupFramework205();
-
+/* de-nativized for Chromium: the original trailer published this via
+ * %SetProperty(global, ...), a V8 natives intrinsic unavailable to
+ * ordinary scripts. Classic-script evaluation already puts the
+ * declaration on the global object; assign explicitly to be safe. */
+if (typeof window !== 'undefined') { window.palmInitFramework2205 = palmInitFramework2205; }

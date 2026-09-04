@@ -130,12 +130,60 @@ if (!window.Mojo) {
 	}
 
 	
+	function writeBuiltinScripts(builtinFrameworkName) {
+		// LunaSysMgr compiled the framework into WebKit as a V8 builtin and
+		// injected it into every app's global object before any app script
+		// ran. WebAppMgr has no such hook, and released submissions ship the
+		// framework only as that blob (javascripts/ holds just
+		// child_loader.js; mojo_host_loader.js was never shipped), so fetch
+		// the blob - de-nativized at packaging time - as an ordinary script.
+		// Parser-blocking document.write()s for the same reason as in
+		// mojo1's mojo.js: everything after the mojo.js tag assumes the
+		// framework is fully initialised.
+
+		// MojoLoader has installed its synchronous-XHR palmGetResource
+		// polyfill by now (its _env is 'browser' whenever document exists),
+		// so the sysmgr host paths are serviceable - and they have to be
+		// used: browser mode routes stage operations through
+		// window.opener.MojoHost, a desktop harness WebAppMgr does not have.
+		Mojo.hasPalmGetResource = !!window.palmGetResource;
+		if (Mojo.hasPalmGetResource) {
+			Mojo.Host.current = Mojo.Host.palmSysMgr;
+		}
+
+		// Modern-Blink fixups, shared with mojo1. Loaded ahead of the
+		// framework because the PalmSystem members it fills in are read
+		// during initialisation.
+		document.write('<script type="text/javascript" src="/usr/palm/frameworks/mojo/mojo-compat.js"><\/script>');
+
+		document.write('<script type="text/javascript" src="/usr/palm/frameworks/mojo/builtins/' +
+			builtinFrameworkName + '.js"><\/script>');
+
+		// Runs once the blob above has been evaluated and has published its
+		// init function onto window.
+		window.mojoBuiltinLoaded = function() {
+			var init = window[builtinFrameworkName];
+			window.mojoBuiltinLoaded = null;
+			if (!init) {
+				var errorString = 'The load of ' + builtinFrameworkName +
+					' (' + submission + ') failed. Perhaps it is not installed?';
+				document.write(errorString);
+				console.error(errorString);
+				return;
+			}
+			console.log("=========> Calling " + builtinFrameworkName);
+			Mojo.BUILTIN_FRAMEWORK = true;
+			init(window, navigator, document);
+		};
+		document.write('<script type="text/javascript">mojoBuiltinLoaded();<\/script>');
+	}
+
 	function loadFramework() {
 		var builtinFrameworkName = "palmInitFramework2" + submission.replace(/\./g, "_");
 		var builtinFrameworkInit = window[builtinFrameworkName];
 		var home = '/usr/palm/frameworks/' + Mojo.MOJO_VERSION +
 			'/' + Mojo.FRAMEWORK_HOME + '/javascripts/';
-		
+
 		if(builtinFrameworkInit) {
 			//load MojoLoader, then load builtin. We're assuming that if there are builtins, we're in a sysmgr env.
 			console.log("=========> Calling " + builtinFrameworkName);
@@ -144,6 +192,8 @@ if (!window.Mojo) {
 			//console.time('execute builtin');
 			builtinFrameworkInit(window, navigator, document);
 			//console.timeEnd('execute builtin');
+		} else if (submission !== 'trunk') {
+			writeBuiltinScripts(builtinFrameworkName);
 		} else {
 			insertScriptTag('mojo_host_loader');
 		}

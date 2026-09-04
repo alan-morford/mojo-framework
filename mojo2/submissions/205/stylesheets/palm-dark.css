@@ -1,0 +1,61 @@
+/*
+   Mojo Styling : Dark
+   Mojo Application Framework
+   Copyright (c) 2007-2009, Palm Inc.
+   All rights reserved.
+
+*/
+
+@import url(global-lists-dark.css);
+@import url(global-dividers-dark.css);
+@import url(global-menus-dark.css);
+@import url(global-buttons-dark.css);
+@import url(global-textfields-dark.css);
+
+.palm-dark a {
+  color: #69a8f5;
+}
+
+.palm-dark a:active {
+  color: #ff7474;
+}
+
+.palm-dark a:visited {
+  color: #b874f6;
+}
+
+body.palm-dark {
+  color: #fff;
+  background: #393e43;
+}
+
+.palm-dark .palm-info-text,
+.palm-dark .palm-body-text {
+  color: #ccc;
+}
+
+.palm-dark .palm-body-title {
+  color: #fff;
+}
+
+.palm-dark .checkbox { background-image: url(../images/checkbox-dark.png); }
+
+.palm-dark .palm-activity-indicator-small,
+#palm-app-menu .palm-activity-indicator-small,
+#palm-device-menu .palm-activity-indicator-small {
+  background-image: url(../images/activity-indicator-32x32-dark.png);
+}
+#palm-app-menu .palm-activity-indicator-small,
+#palm-device-menu .palm-activity-indicator-small {
+  margin-top: -3px;
+  margin-bottom: -4px;
+}
+.palm-dark .palm-spinner-large {
+  background-image: url(../images/activity-indicator-128x128-dark.png);
+}
+.palm-dark .sliding-toggle {
+  -webkit-border-image: url(../images/header-toggle-background-dark.png) 9 29 9 29;
+}
+.palm-dark .toggle-button {
+  background-image: url(../images/header-toggle-dark.png);
+}
